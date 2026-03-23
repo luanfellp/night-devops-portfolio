@@ -4,6 +4,12 @@
 ![AWS](https://img.shields.io/badge/AWS-S3%20%26%20CloudFront-orange?logo=amazon-aws)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+<p align="center">
+  <img src="https://E32YSCS1PNI95Y.cloudfront.net/assets/portfoliostatico.png" alt="Preview do Portfolio" width="800">
+</p>
+
+[🔗 Clique aqui para ver o site ao vivo](https://E32YSCS1PNI95Y.cloudfront.net)
+
 Este é um projeto de portfólio pessoal desenvolvido com foco em **Modern Infrastructure** e **SecOps**. O objetivo principal foi criar uma vitrine pública que demonstra competências em automação de nuvem, segurança de dados e CI/CD.
 
 ## 🚀 Arquitetura de Infraestrutura
