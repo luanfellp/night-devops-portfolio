@@ -1,0 +1,59 @@
+name: Deploy Portfolio S3
+
+on:
+  push:
+    branches: [ main ]
+
+# Permissões necessárias para o OIDC se autenticar na AWS
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  s3-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 1. Injeção de Dados Pessoais (Protege sua privacidade no GitHub)
+      - name: Inject Personal Data
+        env:
+          # Passar os segredos como variáveis de ambiente evita erros de sintaxe no sed
+          EMAIL_VAL: ${{ secrets.PERSONAL_EMAIL }}
+          PHONE_VAL: ${{ secrets.PERSONAL_PHONE }}
+        run: |
+          # 1. Verifica se o arquivo existe
+          if [ ! -f index.html ]; then
+            echo "ERRO: Arquivo index.html não encontrado!"
+            exit 1
+          fi
+
+          # 2. Executa a substituição usando as variáveis de ambiente e o delimitador |
+          sed -i "s|{{PERSONAL_EMAIL}}|$EMAIL_VAL|g" index.html
+          sed -i "s|{{PERSONAL_PHONE}}|$PHONE_VAL|g" index.html
+
+          # 3. Validação: Se as chaves ainda existirem, o pipeline para aqui
+          if grep -q "{{PERSONAL_EMAIL}}" index.html; then
+            echo "ERRO: O sed não conseguiu substituir as tags no HTML."
+            exit 1
+          else
+            echo "Sucesso: Dados injetados corretamente."
+          fi
+
+      # 2. Autenticação OIDC (Sem chaves fixas)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      # 3. Deploy para o S3 (Mantendo sua pasta de imagens segura)
+      - name: Sync S3
+        run: |
+          aws s3 sync . s3://${{ vars.S3_BUCKET_NAME }} --delete --exclude "img/*" --exclude ".git/*" --exclude ".github/*"
+
+      # 4. Invalidação do Cache do CloudFront
+      - name: CloudFront Invalidation
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DIST_ID }} --paths "/*"
