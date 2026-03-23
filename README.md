@@ -6,7 +6,7 @@
 
 ![Preview do Portfolio](portfoliostatico.png)
 
-[🔗 Clique aqui para ver o site ao vivo](https://E32YSCS1PNI95Y.cloudfront.net)
+[🔗 Clique aqui para ver o site ao vivo]([https://E32YSCS1PNI95Y.cloudfront.net](https://dkkn5525y069e.cloudfront.net/))
 
 Este é um projeto de portfólio pessoal desenvolvido com foco em **Modern Infrastructure** e **SecOps**. O objetivo principal foi criar uma vitrine pública que demonstra competências em automação de nuvem, segurança de dados e CI/CD.
 
